@@ -70,10 +70,10 @@ export function Projects() {
   const { ref, isVisible } = useScrollReveal()
 
   return (
-    <div ref={ref} className={`section ${isVisible ? 'reveal-active' : 'reveal-hidden'}`}>
-      <h2>Proyectos</h2>
-      <p>Algunos de los proyectos en los que he trabajado recientemente.</p>
-      <ul className="grid">
+    <div ref={ref} className={`section ${isVisible ? 'reveal-active' : 'reveal-hidden'}`} style={{maxWidth:'1100px', margin:'0 auto', padding:'0'}}>
+      <h2 style={{marginBottom:'18px'}}>Proyectos</h2>
+      <p style={{marginBottom:'18px'}}>Algunos de los proyectos en los que he trabajado recientemente.</p>
+      <ul className="grid" style={{marginTop:'0'}}>
         {sample.map((p, i) => (
           <ProjectCard key={i} project={p} index={i} />
         ))}
