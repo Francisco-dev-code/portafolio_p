@@ -1,34 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import '../assets/css/styles.css'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import { Home } from './components/Home'
+import { About } from './components/About'
+import { Projects } from './components/Projects'
+import { Contact } from './components/Contact'
+import { useDarkMode } from './hooks/useDarkMode'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { isDark, toggle } = useDarkMode()
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      <div className="app-container">
+        <header className="site-header">
+          <nav className="site-nav">
+            <Link to="/" className="nav-link">Inicio</Link>
+            <Link to="/sobre-mi" className="nav-link">Sobre mí</Link>
+            <Link to="/proyectos" className="nav-link">Proyectos</Link>
+            <Link to="/contacto" className="nav-link">Contacto</Link>
+            <button 
+              onClick={toggle} 
+              className="theme-toggle"
+              aria-label="Toggle dark mode"
+            >
+              {isDark ? '☀️' : '🌙'}
+            </button>
+          </nav>
+        </header>
+
+        <main className="site-main">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/sobre-mi" element={<About />} />
+            <Route path="/proyectos" element={<Projects />} />
+            <Route path="/contacto" element={<Contact />} />
+          </Routes>
+        </main>
+
+        <footer className="footer">© {new Date().getFullYear()} Mi Portafolio</footer>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </Router>
   )
 }
 
