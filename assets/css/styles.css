@@ -4,6 +4,10 @@
   --radius: 16px;
   --glass: rgba(255,255,255,0.85);
   --glass-dark: rgba(30,41,59,0.85);
+  /* CTA gradient colors */
+  --cta-from: #0062e6;
+  --cta-to: #00bcd4;
+  --cta-text: #ffffff;
   /* Paleta minimalista 60-30-10 */
   --primary: #007BFF; /* Azul brillante CTA */
   --primary-dark: #0056b3;
@@ -210,6 +214,30 @@ button:hover{
   margin-top: 24px;
 }
 
+.form-error {
+  color: #b91c1c; /* red-700 */
+  background: rgba(185,28,28,0.04);
+  border: 1px solid rgba(185,28,28,0.12);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.form-success {
+  color: #064e3b; /* green-800 */
+  background: rgba(16,185,129,0.05);
+  border: 1px solid rgba(16,185,129,0.12);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px; overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px); white-space: nowrap;
+}
+
 h1, h2, h3{ 
   margin-top: 0;
   color: var(--primary);
@@ -274,6 +302,99 @@ p{
 .section > * {
   animation: fadeIn 0.7s cubic-bezier(.4,0,.2,1);
 }
+
+/* Utility classes for hero, about and contact layouts (extracted from inline styles) */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0;
+}
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-width: 280px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.hero-actions { margin-top: 8px; display: flex; gap: 18px; }
+.hero-image { display: flex; justify-content: center; align-items: center; min-width: 280px; max-width: 500px; margin: 0 auto; }
+.hero-image img { width: 100%; max-width: 380px; height: auto; border-radius: 18px; box-shadow: 0 8px 32px rgba(0,123,255,0.10); }
+
+.about-panel { max-width: 900px; display: grid; grid-template-columns: 1fr 2fr; gap: 32px; align-items: center; justify-content: center; background: var(--bg-card); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,123,255,0.10); padding: 24px 18px; margin: 0 auto; }
+.about-left { min-width: 160px; max-width: 200px; display: flex; flex-direction: column; align-items: center; gap: 10px; justify-content: center; }
+.about-right { width: 100%; min-width: 240px; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+
+.contact-panel { width: 100%; max-width: 900px; min-width: 320px; display: grid; grid-template-columns: 1fr 2fr; gap: 32px; align-items: stretch; justify-content: center; background: var(--bg-card); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,123,255,0.10); padding: 32px 32px; margin: 0 auto; }
+.contact-info-column { min-width: 260px; max-width: 340px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; justify-content: center; height: 100%; padding: 16px 0; }
+.contact-form-column { width: 100%; min-width: 280px; display: flex; flex-direction: column; gap: 18px; justify-content: center; align-items: center; height: 100%; }
+
+.project-image { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; margin-bottom: 16px; }
+
+/* Profile presentation */
+.profile-frame {
+  width: 100%;
+  max-width: 380px;
+  aspect-ratio: 1/1;
+  border-radius: 18px;
+  overflow: hidden;
+  display: inline-block;
+  box-shadow: 0 12px 40px rgba(2,6,23,0.18);
+  border: 6px solid rgba(255,255,255,0.6);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.03));
+}
+.profile-frame:focus { outline: 3px solid rgba(0,123,255,0.18); }
+.profile-frame[role="button"], .profile-frame button { border: none; padding: 0; background: transparent; }
+.profile-frame:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 20px 60px rgba(2,6,23,0.28); }
+.profile-img { width: 100%; height: 100%; object-fit: cover; display:block; }
+/* Better face centering for profile images */
+.profile-img { object-position: center 30%; }
+
+/* Button styles */
+.btn-cta {
+  background: linear-gradient(90deg, var(--cta-from), var(--cta-to));
+  color: var(--cta-text);
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  box-shadow: 0 12px 36px rgba(0,87,255,0.20);
+  border: none;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+.btn-cta:hover { transform: translateY(-4px); box-shadow: 0 18px 44px rgba(0,87,255,0.24); }
+.btn-ghost {
+  background: transparent;
+  border: 2px solid rgba(0,123,255,0.14);
+  color: var(--primary);
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+.btn-ghost:hover { background: rgba(0,123,255,0.04); transform: translateY(-2px); }
+
+/* Badges under hero */
+.badges { display:flex; gap:18px; margin-top:18px; align-items:center; }
+.badge { background: var(--bg-card); padding:10px 14px; border-radius:12px; box-shadow: 0 8px 24px rgba(37,99,235,0.06); border: 1px solid var(--border); display:flex; flex-direction:column; align-items:center; min-width:120px; }
+.badge .num { font-weight:800; color:var(--primary); font-size:1.2rem; }
+.badge .label { font-size:0.9rem; color:var(--text-secondary); }
+
+/* Icon helper */
+.icon-inline { width:18px; height:18px; display:inline-block; vertical-align:middle; margin-right:8px; }
+.lead { font-size: 1.15rem; color: var(--text-secondary); max-width: 520px; margin-bottom: 18px; }
+
+/* Lightbox (very small, CSS-only fallback) */
+.profile-lightbox { position: fixed; inset: 0; display: none; justify-content: center; align-items: center; background: rgba(2,6,23,0.6); z-index: 9999; }
+.profile-lightbox.open { display: flex; }
+.profile-lightbox img { max-width: 90%; max-height: 90%; border-radius: 12px; box-shadow: 0 24px 80px rgba(2,6,23,0.5); }
+.profile-lightbox .close-btn { position: absolute; top: 24px; right: 24px; background: rgba(255,255,255,0.92); border: none; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-weight:700; }
 
 /* Responsive */
 @media (max-width: 768px) {

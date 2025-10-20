@@ -1,4 +1,4 @@
-import '../assets/css/styles.css'
+// styles already imported in main.tsx
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { Home } from './components/Home'
 import { About } from './components/About'
