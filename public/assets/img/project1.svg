@@ -1,0 +1,15 @@
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="proj1Gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7c3aed;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="#f8fafc"/>
+  <rect x="20" y="20" width="360" height="260" rx="12" fill="url(#proj1Gradient)" opacity="0.2"/>
+  <rect x="40" y="60" width="120" height="20" rx="4" fill="#2563eb" opacity="0.6"/>
+  <rect x="40" y="100" width="200" height="12" rx="4" fill="#64748b" opacity="0.4"/>
+  <rect x="40" y="130" width="160" height="12" rx="4" fill="#64748b" opacity="0.4"/>
+  <circle cx="320" cy="220" r="40" fill="#10b981" opacity="0.3"/>
+  <text x="200" y="240" font-family="Arial" font-size="32" fill="#2563eb" text-anchor="middle" font-weight="bold">💼</text>
+</svg>

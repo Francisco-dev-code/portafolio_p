@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import phoneIcon from '../../assets/img/phone.svg'
-import avatarFallback from '../../assets/img/avatar.svg'
+// Eliminado avatarFallback, solo se usa profile.jpg
 import githubIcon from '../../assets/img/github.svg'
 import linkedinIcon from '../../assets/img/linkedin.svg'
+import profileImg from '../../assets/img/profile_c.jpg'
 
 export function Contact() {
   const [name, setName] = useState('')
@@ -37,7 +38,12 @@ export function Contact() {
       <div className="contact-panel" style={{display:'flex',justifyContent:'center',alignItems:'flex-start',gap:'32px',background:'var(--bg-card)',borderRadius:'24px',boxShadow:'0 8px 32px rgba(37,99,235,0.12)',padding:'32px 28px',maxWidth:'850px',margin:'0 auto',border:'1px solid var(--border)'}}>
         <div className="contact-info-column" style={{flex:'1',minWidth:'260px',maxWidth:'320px',display:'flex',flexDirection:'column',alignItems:'center',gap:'18px'}}>
           <div style={{width:'90px',height:'90px',borderRadius:'50%',overflow:'hidden',boxShadow:'0 2px 12px rgba(37,99,235,0.12)',marginBottom:'8px',background:'var(--bg-light)'}}>
-            <img src="/assets/img/profile.jpg" alt="Foto de contacto" style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center'}} onError={(e)=>{(e.currentTarget as HTMLImageElement).src = avatarFallback}} />
+            <img
+              src={profileImg}
+              alt="Foto de contacto"
+              style={{width:'100%',height:'100%',objectFit:'cover',objectPosition:'center'}}
+              onError={(e)=>{ (e.currentTarget as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160"><rect width="100%" height="100%" fill="%23e5e7eb"/></svg>' }}
+            />
           </div>
           <h3 style={{color:'var(--primary)', fontWeight:700, marginBottom:'8px', textAlign:'center',fontSize:'1.15rem'}}>Información de contacto</h3>
           <div style={{display:'flex',alignItems:'center',gap:'14px',background:'var(--bg-light)',borderRadius:'12px',padding:'10px 16px',width:'100%',border:'1px solid var(--border)'}}>

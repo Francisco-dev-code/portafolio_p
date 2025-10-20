@@ -1,8 +1,14 @@
 import { useScrollReveal } from '../hooks/useScrollReveal'
-import project1Img from '../../assets/img/project1.svg'
-import project2Img from '../../assets/img/project2.svg'
-import project3Img from '../../assets/img/project3.svg'
-import { useState } from 'react'
+// Usar rutas absolutas para imágenes servidas desde public
+const project1Img = '/assets/img/project1.svg';
+const project2Img = '/assets/img/project2.svg';
+const project3Img = '/assets/img/project3.svg';
+import { useState, useRef, useEffect } from 'react'
+// Importar evidencias de Perfumería desde src para asegurar bundling
+import evPerf1 from '../assets/img/evidence-perfumeria-1.png'
+import evPerf2 from '../assets/img/evidence-perfumeria-2.png'
+import evPerf3 from '../assets/img/evidence-perfumeria-3.png'
+import evPerf4 from '../assets/img/evidence-perfumeria-4.png'
 
 type Project = {
   title: string
@@ -20,10 +26,10 @@ const sample: Project[] = [
     tech: ['JavaScript', 'Postman', 'Mockito', 'JUnit'],
     image: project1Img,
     evidence: [
-      '/assets/img/evidence-perfumeria-1.png',
-      '/assets/img/evidence-perfumeria-2.png',
-      '/assets/img/evidence-perfumeria-3.png',
-      '/assets/img/evidence-perfumeria-4.png',
+      evPerf1,
+      evPerf2,
+      evPerf3,
+      evPerf4,
     ],
   },
   {
@@ -153,7 +159,6 @@ function ProjectCard({ project, index, onEvidence }: { readonly project: Project
           ))}
         </div>
         </div>
-        <span style={{position:'absolute',top:'18px',right:'18px',background:'var(--bg-card)',borderRadius:'50%',boxShadow:'0 2px 8px rgba(37,99,235,0.12)',padding:'6px 10px',fontSize:'0.9rem',color:'var(--primary)',fontWeight:700,opacity:0.85,border:'1px solid var(--border)'}}>Ver más</span>
       </button>
     </li>
   )
@@ -163,6 +168,22 @@ export function Projects() {
   const { ref, isVisible } = useScrollReveal()
   const [modal, setModal] = useState<{open: boolean, project?: Project}>(() => ({open: false}))
   const [zoomImg, setZoomImg] = useState<string|null>(null)
+  const modalRef = useRef<HTMLDialogElement>(null)
+
+  // Hacer scroll hacia arriba cuando se abre el modal
+  useEffect(() => {
+    if (modal.open) {
+      // Hacer scroll hacia arriba inmediatamente
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      // Bloquear el scroll del body cuando el modal está abierto
+      document.body.style.overflow = 'hidden'
+      
+      return () => {
+        // Restaurar el scroll del body cuando se cierra el modal
+        document.body.style.overflow = ''
+      }
+    }
+  }, [modal.open])
 
   return (
     <div ref={ref} className={`section ${isVisible ? 'reveal-active' : 'reveal-hidden'}`} style={{maxWidth:'1100px', margin:'0 auto', padding:'0'}}>
@@ -175,20 +196,34 @@ export function Projects() {
       </ul>
 
       {modal.open && modal.project && (
-        <dialog open className="modal-evidence" style={{
+        <dialog ref={modalRef} open className="modal-evidence" 
+          onClick={(e) => {
+            // Cerrar si se hace clic en el fondo (no en el contenido)
+            if (e.target === e.currentTarget) {
+              setModal({ open: false })
+            }
+          }}
+          style={{
           position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
+          top: '50px',
+          left: '110px',
+          right: '60px',
+          bottom: '60px',
           background: 'rgba(0,0,0,0.18)',
           backdropFilter: 'blur(4px)',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
           zIndex: 1000,
-          padding: '20px',
+          paddingTop: '80px',
+          paddingBottom: '80px',
+          paddingLeft: '20px',
+          paddingRight: '20px',
           border: 'none',
+          margin: '0',
+          maxWidth: '100vw',
+          maxHeight: '100vh',
+          overflow: 'auto',
           borderRadius: '22px',
         }}>
           <div
@@ -198,26 +233,29 @@ export function Projects() {
               borderRadius: '22px',
               border: '2px solid var(--border)',
               boxShadow: '0 8px 40px rgba(37,99,235,0.15)',
-              maxWidth: '700px',
+              maxWidth: '830px',
               width: '100%',
-              maxHeight: '90vh',
+              maxHeight: '85vh',
               position: 'relative',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               overflow: 'auto',
               boxSizing: 'border-box',
+              marginLeft: '0px',
             }}
           >
             <button onClick={() => setModal({ open: false })} style={{ position: 'absolute', top: 18, right: 18, fontSize: '2.2rem', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary)', lineHeight: '1', borderRadius:'50%', boxShadow:'0 2px 8px rgba(37,99,235,0.12)', width:'44px', height:'44px', display:'flex', alignItems:'center', justifyContent:'center', transition:'background 0.2s' }} aria-label="Cerrar" onMouseEnter={e=>e.currentTarget.style.background='var(--bg-light)'} onMouseLeave={e=>e.currentTarget.style.background='none'}>×</button>
             <h3 style={{ marginBottom: '24px', textAlign: 'center', fontSize: '1.5rem', width: '100%', color: 'var(--text-primary)', fontWeight:800, letterSpacing:'0.01em' }}>{modal.project?.title}</h3>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '24px',
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '20px',
               justifyContent: 'center',
+              alignItems: 'start',
               marginBottom: '20px',
               width: '100%',
+              maxWidth: '100%',
             }}>
               {Array.isArray(modal.project?.evidence)
                 ? modal.project.evidence.map((img, idx) => (
@@ -225,34 +263,47 @@ export function Projects() {
                       <button
                         type="button"
                         style={{
-                          background: 'none',
-                          border: 'none',
-                          padding: 0,
+                          background: 'var(--bg-light)',
+                          border: '2px solid var(--border)',
+                          padding: '12px',
                           margin: 0,
                           cursor: 'zoom-in',
                           width: '100%',
+                          height: '220px',
                           borderRadius:'14px',
-                          boxShadow:'0 2px 12px #0074f822',
-                          transition:'box-shadow 0.2s',
+                          boxShadow:'0 2px 12px rgba(37,99,235,0.12)',
+                          transition:'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
                         }}
                         aria-label={`Ampliar evidencia ${idx + 1}`}
                         onClick={() => setZoomImg(img)}
-                        onMouseEnter={e=>e.currentTarget.style.boxShadow='0 8px 24px #0074f844'}
-                        onMouseLeave={e=>e.currentTarget.style.boxShadow='0 2px 12px #0074f822'}
+                        onMouseEnter={e=>{
+                          e.currentTarget.style.boxShadow='0 8px 24px rgba(37,99,235,0.25)';
+                          e.currentTarget.style.transform='translateY(-4px) scale(1.02)';
+                        }}
+                        onMouseLeave={e=>{
+                          e.currentTarget.style.boxShadow='0 2px 12px rgba(37,99,235,0.12)';
+                          e.currentTarget.style.transform='none';
+                        }}
                       >
                         <img
                           src={img}
                           alt={`Evidencia ${idx + 1} de ${modal.project?.title}`}
+                          loading="lazy"
+                          decoding="async"
                           style={{
                             width: '100%',
-                            maxWidth: '260px',
-                            height: 'auto',
-                            borderRadius: '12px',
-                            border: '2px solid var(--border)',
-                            boxShadow: '0 2px 10px rgba(37,99,235,0.08)',
-                            background: 'var(--bg-light)',
+                            height: '100%',
+                            objectFit: 'contain',
+                            borderRadius: '8px',
                             display: 'block',
-                            transition:'box-shadow 0.2s',
+                            backgroundColor: 'var(--bg-card)'
+                          }}
+                          onError={(e)=>{
+                            const el = e.currentTarget as HTMLImageElement;
+                            el.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="220"><rect width="100%" height="100%" fill="#111827"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#9ca3af" font-family="Arial" font-size="16">Imagen no disponible</text></svg>`);
                           }}
                         />
                       </button>
@@ -267,62 +318,94 @@ export function Projects() {
       )}
 
       {zoomImg && (
-        <dialog open style={{
+        <dialog 
+          open 
+          onClick={(e) => {
+            // Cerrar si se hace clic en el fondo (no en la imagen)
+            if (e.target === e.currentTarget) {
+              setZoomImg(null)
+            }
+          }}
+          style={{
           position: 'fixed',
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0,0,0,0.28)',
-          backdropFilter: 'blur(6px)',
+          background: 'rgba(0,0,0,0.85)',
+          backdropFilter: 'blur(8px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 2000,
           border: 'none',
-          borderRadius: '22px',
+          padding: '20px',
+          margin: 0,
+          cursor: 'zoom-out',
         }}>
           <button
             type="button"
             style={{
-              background: 'none',
-              border: 'none',
-              padding: 0,
+              background: 'rgba(255,255,255,0.15)',
+              border: '2px solid rgba(255,255,255,0.3)',
+              padding: '8px',
               margin: 0,
-              cursor: 'zoom-out',
+              cursor: 'pointer',
               position: 'absolute',
-              top: '32px',
-              right: '32px',
-              fontSize: '2.2rem',
+              top: '20px',
+              right: '20px',
+              fontSize: '2rem',
               color: '#fff',
               zIndex: 2100,
               borderRadius:'50%',
-              boxShadow:'0 2px 8px #0074f822',
-              width:'44px',
-              height:'44px',
+              boxShadow:'0 4px 12px rgba(0,0,0,0.4)',
+              width:'48px',
+              height:'48px',
               display:'flex',
               alignItems:'center',
               justifyContent:'center',
-              transition:'background 0.2s',
+              transition:'all 0.2s',
+              fontWeight: 'bold',
             }}
             aria-label="Cerrar evidencia ampliada"
             onClick={() => setZoomImg(null)}
-            onMouseEnter={e=>e.currentTarget.style.background='#0074f8'}
-            onMouseLeave={e=>e.currentTarget.style.background='none'}
-          >×</button>
-          <img
-            src={zoomImg}
-            alt="Evidencia ampliada"
-            style={{
-              maxWidth: '90vw',
-              maxHeight: '90vh',
-              borderRadius: '18px',
-              boxShadow: '0 8px 40px rgba(37,99,235,0.15)',
-              background: 'var(--bg-card)',
-              border: '4px solid var(--bg-card)',
-              transition:'box-shadow 0.2s',
+            onMouseEnter={e=>{
+              e.currentTarget.style.background='rgba(255,255,255,0.25)';
+              e.currentTarget.style.transform='scale(1.1)';
             }}
-          />
+            onMouseLeave={e=>{
+              e.currentTarget.style.background='rgba(255,255,255,0.15)';
+              e.currentTarget.style.transform='scale(1)';
+            }}
+          >×</button>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: '95vw',
+              maxHeight: '95vh',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+            }}
+          >
+            <img
+              src={zoomImg}
+              alt="Evidencia ampliada"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '95vh',
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain',
+                borderRadius: '12px',
+                boxShadow: '0 12px 48px rgba(0,0,0,0.6)',
+                background: '#fff',
+                border: '3px solid rgba(255,255,255,0.2)',
+                cursor: 'default',
+              }}
+            />
+          </div>
         </dialog>
       )}
     </div>

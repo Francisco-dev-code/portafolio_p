@@ -6,6 +6,9 @@ module.exports = function (config) {
     frameworks: ['jasmine'],
     files: [
       { pattern: 'src/**/*.test.ts?(x)', watched: false },
+      // Sirve imágenes estáticas para que rutas absolutas (/assets/...) funcionen en tests
+      { pattern: 'public/assets/img/**/*', watched: false, included: false, served: true, nocache: false },
+      { pattern: 'assets/img/**/*', watched: false, included: false, served: true, nocache: false },
     ],
     preprocessors: {
       'src/**/*.test.ts': ['esbuild'],
@@ -22,12 +25,24 @@ module.exports = function (config) {
         'process.env.NODE_ENV': '"test"',
       },
       loader: {
-        '.svg': 'text',
+        // Import SVGs as data URLs so <img src={icon.svg}> works in tests without 404s
+        '.svg': 'dataurl',
         '.png': 'dataurl',
         '.jpg': 'dataurl',
       },
     },
-    reporters: ['spec'],
+    reporters: ['spec', 'coverage'],
+    coverageReporter: {
+      dir: 'coverage/',
+      reporters: [
+        { type: 'html', subdir: 'html' },
+        { type: 'text-summary' },
+        { type: 'lcovonly', subdir: '.' },
+      ],
+      instrumenterOptions: {
+        istanbul: { noCompact: true }
+      },
+    },
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
@@ -40,7 +55,12 @@ module.exports = function (config) {
       'karma-chrome-launcher',
       'karma-spec-reporter',
       'karma-esbuild',
+      'karma-coverage',
     ],
+    // Mapea rutas absolutas usadas por la app a los archivos servidos por Karma
+    proxies: {
+      '/assets/': '/base/public/assets/',
+    },
     client: {
       jasmine: { random: false },
       clearContext: false,
